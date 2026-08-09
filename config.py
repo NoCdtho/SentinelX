@@ -6,7 +6,7 @@ from google import genai
 load_dotenv()
 
 # Capture Settings
-MAX_PACKETS = int(os.getenv("MAX_PACKETS", "20"))
+MAX_PACKETS = 1
 TSHARK_INTERFACE = os.getenv("TSHARK_INTERFACE", "Wi-Fi")
 
 # LLM API Settings
