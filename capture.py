@@ -15,6 +15,7 @@ def check_tshark() -> bool:
         if result.returncode != 0:
             return False
         print("TShark detected.")
+        return True
     except (FileNotFoundError, Exception) as exc:
         if not isinstance(exc, FileNotFoundError):
             print(f"Error checking TShark: {exc}")
