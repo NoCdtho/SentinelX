@@ -62,11 +62,12 @@ def capture_packets(interface: str, packet_limit: int = MAX_PACKETS) -> list:
     ]
 
     try:
+        # this is used to execute above items in list as command in terminal
         process = subprocess.run(
-            command,
-            capture_output=True,
-            text=True,
-            timeout=120
+            command, # This are actual command executing on the terminal.
+            capture_output=True, # I want the python to the stdout and stderr. 
+            text=True, # convert the raw bytes into human readable format.
+            timeout=120 # waiting time.
         )
 
         if process.returncode != 0:
@@ -79,7 +80,7 @@ def capture_packets(interface: str, packet_limit: int = MAX_PACKETS) -> list:
             return []
 
         try:
-            packets = json.loads(process.stdout)
+            packets = json.loads(process.stdout) # This is where packets are captured and stored
         except json.JSONDecodeError as exc:
             print(f"Could not parse TShark JSON: {exc}")
             return []
@@ -96,3 +97,4 @@ def capture_packets(interface: str, packet_limit: int = MAX_PACKETS) -> list:
     except Exception as exc:
         print(f"Capture error: {exc}")
         return []
+
