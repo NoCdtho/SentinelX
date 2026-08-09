@@ -1,6 +1,7 @@
 import os
 import sys
 from dotenv import load_dotenv
+from google import genai
 
 load_dotenv()
 
@@ -10,6 +11,15 @@ TSHARK_INTERFACE = os.getenv("TSHARK_INTERFACE", "Wi-Fi")
 
 # LLM API Settings
 LLM_API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not LLM_API_KEY:
+    print("key not found")
+    sys.exit(1)
+
+gemini_client = genai.Client(
+    api_key=LLM_API_KEY
+)
+
 LLM_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
 
 # Notion API Settings
