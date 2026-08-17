@@ -7,7 +7,7 @@ load_dotenv()
 
 # Capture Settings
 MAX_PACKETS = 1
-TSHARK_INTERFACE = os.getenv("TSHARK_INTERFACE", "Wi-Fi")
+TSHARK_INTERFACE = os.getenv("TSHARK_INTERFACE", "WI-FI")
 
 # LLM API Settings
 LLM_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -21,6 +21,7 @@ gemini_client = genai.Client(
 )
 
 LLM_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+LOCAL_LLM_MODEL = os.getenv("QWEN_MODEL","qwen3:8b")
 
 # Notion API Settings
 NOTION_API_KEY = os.getenv("NOTION_API_KEY")
