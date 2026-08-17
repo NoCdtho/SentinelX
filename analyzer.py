@@ -1,6 +1,6 @@
 import json
-import requests
-from config import gemini_client, LLM_MODEL
+import ollama
+from config import gemini_client, LLM_MODEL, LOCAL_LLM_MODEL
 from google.genai import types 
 import traceback
 
@@ -43,23 +43,19 @@ def analyze_packet_with_llm(packet: dict) -> dict:
     print("DEBUG: Packet type:", type(packet))
     print("DEBUG: Packet:", packet)
 
+    # Here the packets dictionary are converted into JSON text string.
     packet_json = json.dumps(
         packet,
         indent=2
     )
-
     prompt = f"""
         {system_prompt}
-
         Analyze the following network packet:
-
         {packet_json}
-
         Return JSON only.
         """
-
     try:
-
+        # The response is being is stored in the form JSON as well below is API call being made 
         response = gemini_client.models.generate_content(
             model=LLM_MODEL,
             contents=prompt,
@@ -68,11 +64,10 @@ def analyze_packet_with_llm(packet: dict) -> dict:
             )
         )
 
-        # text only returns the text part and ignore the non text part
+        # Below attribute pulls the raw string out of the API's response object.
         response_text = response.text 
 
-        print("DEBUG: Gemini response text:", repr(response_text))
-
+        # print("DEBUG: Gemini response text:", repr(response_text))
         if not response_text:
             return  {
                 "Summary" : "There is empty response from gemini" 
@@ -81,34 +76,71 @@ def analyze_packet_with_llm(packet: dict) -> dict:
         response_text = clean_json_response(response_text)
 
         try:
-            result = json.loads(
-                response_text
-            )
+            # This function converts the json object in python dictionary
+            result = json.loads(response_text)
 
         except json.JSONDecodeError as exc:
-
             print(exc)
-
             return {
                 "Summary" : "There is empty response from gemini",
                 "Description": "Gemini returned invalid JSON."
             }
-
+        
+        # Check if the result is a disctionary or not type checking
         if not isinstance(result, dict):
             return {
                 "Summary" : "There is empty response from gemini",
                 "Description": "Gemini response was not a JSON object."
             }
-        
         return result
 
     except Exception as exc:
-
         traceback.print_exc()
-
         return {
                 "Summary" : "There is empty response from gemini",
                 "Description": "Gemini analysis failed."
             }
-            
 
+# Analyze structured packet using qwen 
+def analyze_packet_with_local_llm(packet: dict)-> dict:
+    packet_json = json.dumps(packet, indent=2)
+
+    # Structure prompt
+    prompt = f""" 
+    {system_prompt} 
+    Analyze this network packet:
+    {packet_json}
+    """
+
+    try:
+        response = ollama.chat(
+            model=LOCAL_LLM_MODEL,
+            messages=[
+                {
+                    "role": "system",
+                    "content": system_prompt
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            format="json"
+        )
+
+        response_text = response["message"]["content"]
+
+        if not response_text:
+            raise RuntimeError(
+                "Local LLM return a empty response."
+            )
+
+        result = json.loads(response_text)
+        return result
+
+    except Exception as e:
+        print("Local LLM error: {exc}")
+        return {
+            "Summary" : "There is empty response from qwen",
+            "Description": "Qwen analysis failed."
+        }
