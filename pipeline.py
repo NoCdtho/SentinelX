@@ -3,7 +3,7 @@ import time
 from config import MAX_PACKETS, TSHARK_INTERFACE, validate_configuration
 from capture import check_tshark, capture_packets
 from parser import parse_packet
-from analyzer import analyze_packet_with_llm
+from analyzer import analyze_packet_with_llm, analyze_packet_with_local_llm 
 from notion_client import create_notion_page
 
 
@@ -31,6 +31,7 @@ def run_analysis():
     print("Parsing packets")
     print()
 
+    # Here the parsed packet are stored as list of dictionary
     parsed_packets = []
     for index, raw_packet in enumerate(packets_raw, start=1):
         packet = parse_packet(raw_packet, index)
@@ -44,8 +45,8 @@ def run_analysis():
 
     analyzed_packets = []
     for index, packet in enumerate(parsed_packets, start=1):
-        print(f"\nAnalyzing packet {index}/{len(parsed_packets)}...")
-        analysis = analyze_packet_with_llm(packet)
+        print(f"\nAnalyzing packet with local llm packets scanned {index} out of {len(parsed_packets)}...")
+        analysis = analyze_packet_with_local_llm(packet)
         analyzed_packets.append({"packet": packet, "analysis": analysis})
         print(f"Risk: {analysis.get('risk_level', 'Unknown')}")
 
