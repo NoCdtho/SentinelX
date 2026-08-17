@@ -54,8 +54,7 @@ def run_analysis():
 
     # Export to Notion
     print()
-    print("=" * 60)
     print("CREATING NOTION DOCUMENT")
-    print("=" * 60)
+    print()
 
     create_notion_page(analyzed_packets)
