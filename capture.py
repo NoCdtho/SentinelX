@@ -8,7 +8,7 @@ def check_tshark() -> bool:
     try:
         result = subprocess.run(
             ["tshark", "--version"],
-            capture_output=True,
+            capture_output=True, #This capture_output stores the output this py. script
             text=True,
             timeout=10
         )
@@ -48,9 +48,8 @@ def list_interfaces() -> list:
 def capture_packets(interface: str, packet_limit: int = MAX_PACKETS) -> list:
     """Capture packets via TShark and return raw JSON data."""
     print()
-    print("=" * 60)
     print("Starting packet capture")
-    print("=" * 60)
+    print()
     print(f"Interface   : {interface}")
     print(f"Packet limit: {packet_limit}\n")
 
@@ -65,7 +64,7 @@ def capture_packets(interface: str, packet_limit: int = MAX_PACKETS) -> list:
         # this is used to execute above items in list as command in terminal
         process = subprocess.run(
             command, # This are actual command executing on the terminal.
-            capture_output=True, # I want the python to the stdout and stderr. 
+            capture_output=True, # I want this python script to read stdout and stderr. 
             text=True, # convert the raw bytes into human readable format.
             timeout=120 # waiting time.
         )

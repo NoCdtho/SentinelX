@@ -8,18 +8,19 @@ from notion_client import create_notion_page
 
 
 def run_analysis():
-    """Run the complete end-to-end packet analysis pipeline."""
+    
+    # This functions ensures all the required variables are set.
     validate_configuration()
 
+    # Checks if tshaark is present or not. 
     if not check_tshark():
         print("\nTShark was not found. Install Wireshark/TShark and add tshark to PATH.")
         sys.exit(1)
 
     print()
-    print("=" * 60)
     print("AGENTIC NETWORK PACKET ANALYZER")
-    print("=" * 60)
 
+    # Here network packets are being captured
     packets_raw = capture_packets(TSHARK_INTERFACE, MAX_PACKETS)
     if not packets_raw:
         print("No packets available for analysis.")
@@ -27,9 +28,8 @@ def run_analysis():
 
     # Parse Packets
     print()
-    print("=" * 60)
     print("Parsing packets")
-    print("=" * 60)
+    print()
 
     parsed_packets = []
     for index, raw_packet in enumerate(packets_raw, start=1):
@@ -39,9 +39,8 @@ def run_analysis():
 
     # LLM Security Analysis
     print()
-    print("=" * 60)
     print("LLM SECURITY ANALYSIS")
-    print("=" * 60)
+    print()
 
     analyzed_packets = []
     for index, packet in enumerate(parsed_packets, start=1):
