@@ -1,79 +1,32 @@
-from tools.tshark import capture_packets
-from tools.notion_tools import create_notion_page
+from dataclasses import dataclass, field # this import functions that are mainly used to store data with less boilerplate code
+from typing import List, Dict, Any # used to tell the type of variable is. 
+from enum import Enum
 
-TOOLS = {
-    "capture_packets": capture_packets,
-    "write_notion": create_notion_page,
-}
+class AgentStatus(Enum): # This is a custom enumeration  
+ INIT = "INIT" # agent has started working 
+ STARTED = "STARTED" # LLM is processing 
+ TOOL_EXECUTION = "TOOL_EXECUTION" # Tool executed completed 
+ TOOL_FAILED = "TOOL_FAILED" # Tool failed to execute 
+ COMPLETED = "COMPLETED" # task is completed by the agent
 
-TOOLS_DESCRIPTION = """
-Available tools:
-
-capture_packets
-----------------
-Captures network packets using TShark.
-
-Arguments:
-count: number of packets to capture.
-
-Important:
-The normal capture batch size is 5 packets.
-
-
-write_notion
-------------
-Writes the investigation results to a Notion page.
-
-Arguments:
-The list of packet explanation is being passed.
-"""
-
-AGENT_SYSTEM_PROMPT = """
-You are the decision maker.
-
-The Python program does NOT decide the investigation
-workflow. You must decide what action should be taken
-next.
-
-You have access to tools.
-
-Your job is to:
-
-1. Examine the current network observations.
-2. Decide whether more information is needed.
-3. Decide which available tool should be used.
-4. Provide the arguments for that tool.
-5. Examine the tool result.
-6. Decide what to do next.
-7. Finish when the investigation is sufficiently complete.
-
-Rules:
-
-- Never invent packet information.
-- Do not automatically assume traffic is malicious.
-- A single packet does not prove an attack.
-- Prefer collecting evidence before making conclusions.
-- You normally receive network traffic in batches of 5 packets.
-- You may request another packet batch when more evidence is needed.
-- Use write_notion when the investigation result is ready.
-- Finish only when the investigation is complete.
-
-You must return ONLY valid JSON.
-"""
-
-
+@dataclass
 class AgentState:
+    # 1. store the LLM decision and result from a tool 
+    messages: List[Dict[str, Any]] = field(default_factory=list) # Dictionary the keys should be string and values can be any type and default value that is assinged makes a new list is created everytime the new instance of the class is created.
+    
+    # 2. Number of packets examined
+    packets_examined: int = 0
+    
+    # 3. Tracks the current status of the agent
+    status: AgentStatus = AgentStatus.STARTED
+    
+    # 4. Stores the tool call made by the LLM
+    current_tool_call: Dict[str, Any] = field(default_factory=dict)
 
-    def __init__(self, goal: str):
 
-        self.goal = goal
-
-        self.packets = []
-
-        self.analysis = []
-
-        self.actions = []
-
-        self.tool_results = []
-
-        self.finished = False
+    def add_message(self, role: str, content: str, name: str):
+        """Helper to format messages for Qwen."""
+        msg = {"role": role, "content": content}
+        if name:
+            msg["name"] = name  # Useful for identifying tool responses
+        self.messages.append(msg)
