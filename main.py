@@ -1,4 +1,4 @@
-from capture import check_tshark, list_interfaces
+from tshark import check_tshark, list_interfaces
 from pipeline import run_analysis
 
 

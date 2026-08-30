@@ -1,10 +1,10 @@
 import sys
 import time
 from config import MAX_PACKETS, TSHARK_INTERFACE, validate_configuration
-from capture import check_tshark, capture_packets
+from tshark import check_tshark, capture_packets
 from parser import parse_packet
 from analyzer import analyze_packet_with_llm, analyze_packet_with_local_llm 
-from notion_client import create_notion_page
+from notion_tools import create_notion_page
 
 
 def run_analysis():
