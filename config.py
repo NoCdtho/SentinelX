@@ -6,9 +6,9 @@ from google import genai
 load_dotenv()
 
 # Capture Settings
-MAX_PACKETS = 10
+MAX_PACKETS = 1
 TSHARK_INTERFACE = os.getenv("TSHARK_INTERFACE", "WI-FI")
-MAX_PACKETS_LIMIT = 50
+MAX_PACKETS_LIMIT = 10
 
 # LLM API Settings
 LLM_API_KEY = os.getenv("GEMINI_API_KEY")

@@ -1,5 +1,5 @@
-from capture import check_tshark, list_interfaces
-from pipeline import run_analysis
+from tshark import check_tshark, list_interfaces
+from pipeline import analysis
 
 
 def print_help():
@@ -25,7 +25,7 @@ def main():
             break
 
         if command == "start":
-            run_analysis()
+            analysis()
         elif command == "interfaces":
             if check_tshark():
                 list_interfaces()
