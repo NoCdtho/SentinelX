@@ -8,6 +8,7 @@ load_dotenv()
 # Capture Settings
 MAX_PACKETS = 10
 TSHARK_INTERFACE = os.getenv("TSHARK_INTERFACE", "WI-FI")
+MAX_PACKETS_LIMIT = 50
 
 # LLM API Settings
 LLM_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -30,7 +31,7 @@ NOTION_VERSION = "2022-06-28"
 NOTION_API_URL = "https://api.notion.com/v1/pages"
 
 
-def validate_configuration():
+def validate_configuration() -> bool:
     """Ensure all required environment variables are set."""
     required_variables = {
         "LLM_API_KEY": LLM_API_KEY,
@@ -46,4 +47,5 @@ def validate_configuration():
         for item in missing:
             print(f"  - {item}")
         print("\nPlease configure your .env file.")
-        sys.exit(1)
+        return False
+    return True
