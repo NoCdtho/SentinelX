@@ -43,5 +43,4 @@ def main():
             print("Type 'help' to see available commands.")
 
 
-if __name__ == "__main__":
-    main()
+main()
