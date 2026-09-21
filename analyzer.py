@@ -49,69 +49,6 @@ def clean_json_response(response_text: str) -> str: #type: ignore
 
     return response_text
 
-# Analyze one structured network packet using Gemini.
-def analyze_packet_with_llm(packet: dict) -> dict:
-
-    print("DEBUG: Packet type:", type(packet))
-    print("DEBUG: Packet:", packet)
-
-    # Here the packets dictionary are converted into JSON text string.
-    packet_json = json.dumps(
-        packet,
-        indent=2
-    )
-    prompt = f"""
-        {system_prompt}
-        Analyze the following network packet:
-        {packet_json}
-        Return JSON only.
-        """
-    try:
-        # The response is being is stored in the form JSON as well below is API call being made 
-        response = gemini_client.models.generate_content(
-            model=LLM_MODEL,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json"
-            )
-        )
-
-        # Below attribute pulls the raw string out of the API's response object.
-        response_text = response.text 
-
-        # print("DEBUG: Gemini response text:", repr(response_text))
-        if not response_text:
-            return  {
-                "Summary" : "There is empty response from gemini" 
-            }
-
-        response_text = clean_json_response(response_text)
-
-        try:
-            # This function converts the json object in python dictionary
-            result = json.loads(response_text)
-
-        except json.JSONDecodeError as exc:
-            print(exc)
-            return {
-                "Summary" : "There is empty response from gemini",
-                "Description": "Gemini returned invalid JSON."
-            }
-        
-        # Check if the result is a disctionary or not type checking
-        if not isinstance(result, dict):
-            return {
-                "Summary" : "There is empty response from gemini",
-                "Description": "Gemini response was not a JSON object."
-            }
-        return result
-
-    except Exception as exc:
-        traceback.print_exc()
-        return {
-                "Summary" : "There is empty response from gemini",
-                "Description": "Gemini analysis failed."
-            }
 
 # Analyze structured packet using qwen 
 def analyze_packet_with_local_llm(packet: dict)-> dict:
@@ -120,8 +57,7 @@ def analyze_packet_with_local_llm(packet: dict)-> dict:
     packet_json = json.dumps(packet, indent=2)
 
     # Structure prompt
-    prompt = f""" 
-    {system_prompt} 
+    prompt = f"""  
     Analyze this network packet:
     {packet_json}
     """
@@ -142,14 +78,16 @@ def analyze_packet_with_local_llm(packet: dict)-> dict:
             format="json"
         )
 
-        response_text = response["message"]["content"]
-
-        if not response_text:
+        responses= response["message"]["content"]
+        role = response["messages"]["role"]
+        print(f"This was asked by {role}")
+        print(f"This is the response: {responses}")
+        if not responses:
             raise RuntimeError(
                 "Local LLM return a empty response."
             )
 
-        result = json.loads(response_text) # Convert JSON formated string into python object
+        result = json.loads(responses) # Convert JSON formated string into python object
         return result
 
     except Exception as e:
