@@ -10,6 +10,9 @@ def analysis():
 
     # This functions ensures all the required variables are set.
     is_validate: bool = validate_configuration()
+    if not is_validate:
+        print("there is something missing in config check it")
+        sys.exit(1)
 
     # Checks if tshark is present or not.
     if not check_tshark():
@@ -33,22 +36,30 @@ def analysis():
     for index, raw_packet in enumerate(packets_raw, start=1):
         packet = parse_packet(raw_packet, index)
         parsed_packets.append(packet)
-        print(f"[{index}/{len(packets_raw)}] {packet['protocol_stack']} {packet['source_ip']} -> {packet['destination_ip']}")
+        print(f"[{index}/{len(packets_raw)}]")
 
     # LLM Security Analysis
     print("\nLLM SECURITY ANALYSIS\n")
 
+    # I want to store the explanation of captured packets so far 
     analyzed_packets = []
 
     # Iterate directly through the parsed packets list. 
     # Python allows dynamically appending to a list while iterating over it.
     for packet in parsed_packets:
-            
-        decision_and_explanation = analyze_packet_with_local_llm(packet)
-        
-        tool = decision_and_explanation.get("tool")
-        explanation = decision_and_explanation.get("explanation")
 
+        if len(parsed_packets) > 5:
+            print("limit reached look 5 packet are explained")
+            break
+
+        decision_and_explanation = analyze_packet_with_local_llm(packet)
+
+        print()
+        tool = decision_and_explanation.get("tool")
+        print("print tool choosen: ", tool)
+
+        explanation = decision_and_explanation.get("explanation")
+        print(explanation)
         analyzed_packets.append(explanation)
         
         # Call the tool decided by the LLM
@@ -72,7 +83,7 @@ def analysis():
 
             # Pass Qwen's extracted explanation to Notion
             print("\nCREATING NOTION DOCUMENT\n")
-            create_notion_page(explanation)
+            create_notion_page(analyzed_packets)
             
             # Immediately exit the analysis function
             return
@@ -81,3 +92,4 @@ def analysis():
     if analyzed_packets:
         print("\nFinished analyzing all packets. Creating Notion Document.")
         create_notion_page(analyzed_packets)
+        return
