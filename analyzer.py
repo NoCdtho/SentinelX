@@ -1,6 +1,6 @@
 import json
 import ollama
-from config import gemini_client, LLM_MODEL, LOCAL_LLM_MODEL
+from config import  LOCAL_LLM_MODEL
 from google.genai import types 
 import traceback
 
