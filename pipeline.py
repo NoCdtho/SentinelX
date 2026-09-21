@@ -35,6 +35,7 @@ def run_analysis():
     parsed_packets = []
     for index, raw_packet in enumerate(packets_raw, start=1):
         packet = parse_packet(raw_packet, index)
+        print(packet)
         parsed_packets.append(packet)
         print(f"[{index}/{len(packets_raw)}] {packet['protocol_stack']} {packet['source_ip']} -> {packet['destination_ip']}")
 

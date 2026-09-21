@@ -9,7 +9,7 @@ def get_field(fields: dict, field_name: str, default: str = "N/A") -> str:
 
     return str(value)
 
-
+# This fun is used to only keep the neccessary packets
 def parse_packet(raw_packet: dict, packet_number: int) -> dict:
     """Convert raw nested TShark JSON to a structured summary object."""
     layers = raw_packet.get("_source", {}).get("layers", {})
@@ -92,3 +92,4 @@ def parse_packet(raw_packet: dict, packet_number: int) -> dict:
         }
 
     return packet
+

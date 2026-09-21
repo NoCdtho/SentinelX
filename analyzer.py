@@ -22,7 +22,6 @@ system_prompt = """
 # Remove markdown JSON fences if Gemini returns them.
 def clean_json_response(response_text: str) -> str: #type: ignore
     
-    
     if response_text.startswith("```json"):
         response_text = response_text[7:]
     
@@ -35,7 +34,6 @@ def clean_json_response(response_text: str) -> str: #type: ignore
     response_text = response_text.strip()
 
     return response_text
-
 
 # Analyze one structured network packet using Gemini.
 def analyze_packet_with_llm(packet: dict) -> dict:
@@ -144,3 +142,6 @@ def analyze_packet_with_local_llm(packet: dict)-> dict:
             "Summary" : "There is empty response from qwen",
             "Description": "Qwen analysis failed."
         }
+
+
+    

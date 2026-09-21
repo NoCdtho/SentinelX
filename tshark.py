@@ -2,6 +2,7 @@ import json
 import subprocess
 from config import MAX_PACKETS
 
+"""Here we wanna check tshark and capture packets via tshark"""
 
 def check_tshark() -> bool:
     """Check if TShark is installed and accessible in PATH."""
@@ -79,13 +80,13 @@ def capture_packets(interface: str, packet_limit: int = MAX_PACKETS) -> list[dic
             return []
 
         try:
-            packets = json.loads(process.stdout) # This is where packets are captured and stored
+            packets = json.loads(process.stdout) # JSON formated string converted into python object 
         except json.JSONDecodeError as exc:
             print(f"Could not parse TShark JSON: {exc}")
             return []
 
         print(f"\nCaptured {len(packets)} packet(s).")
-        return packets[:packet_limit]
+        return packets
 
     except subprocess.TimeoutExpired:
         print("TShark timed out.")

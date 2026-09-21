@@ -12,10 +12,9 @@ def print_help():
 
 def main():
     print()
-    print("=" * 60)
     print("AI NETWORK PACKET ANALYSIS TOOL")
-    print("=" * 60)
     print_help()
+    print()
 
     while True:
         try:
@@ -43,5 +42,4 @@ def main():
             print("Type 'help' to see available commands.")
 
 
-if __name__ == "__main__":
-    main()
+main()
