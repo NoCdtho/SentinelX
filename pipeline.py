@@ -1,11 +1,10 @@
 import sys
 import time
 from config import MAX_PACKETS, TSHARK_INTERFACE, validate_configuration, MAX_PACKETS_LIMIT
-from tshark import check_tshark, capture_packets
+from tools.tshark import check_tshark, capture_packets
 from parser import parse_packet
 from analyzer import analyze_packet_with_local_llm
-from notion_tools import create_notion_page
-from agentState import AgentState
+from tools.notion_tools import create_notion_page
 
 def analysis():
 
@@ -44,12 +43,6 @@ def analysis():
     # Iterate directly through the parsed packets list. 
     # Python allows dynamically appending to a list while iterating over it.
     for packet in parsed_packets:
-        
-        # Packet limit circuit breaker
-        if AgentState.packets_examined >= MAX_PACKETS_LIMIT:
-            print("\nA new notion page is being created for the examined packets because max limit reached")
-            create_notion_page(analyzed_packets)
-            sys.exit(0)
             
         decision_and_explanation = analyze_packet_with_local_llm(packet)
         
@@ -58,9 +51,6 @@ def analysis():
 
         analyzed_packets.append(explanation)
         
-        # Increment by exactly 1 for the packet we just analyzed
-        AgentState.packets_examined += 1
-
         # Call the tool decided by the LLM
         if tool == "fetch_tshark_packets":
             print(f"\nCapturing new packets (Max: {MAX_PACKETS})")
