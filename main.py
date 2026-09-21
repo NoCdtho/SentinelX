@@ -1,4 +1,4 @@
-from tshark import check_tshark, list_interfaces
+from tools.tshark import check_tshark, list_interfaces
 from pipeline import analysis
 
 
