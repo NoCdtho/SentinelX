@@ -9,15 +9,14 @@ system_prompt = """
     You have access to two tools:
     1. **fetch_tshark_packets**: Fetches additional network packets for further analysis.
     2. **document_to_notion**: Saves the current analysis to Notion.
-
+    Do not choose anthing else other then this.
     Decide which tool you need to use next.
-
     - If you choose **fetch_tshark_packets**, respond with a JSON object containing exactly two fields:
     - "tool_name": "fetch_tshark_packets"
     - "explanation": A brief explanation of why you need more packets.
 
-    - If you choose **document_to_notion**, respond with a JSON object containing the full analysis in exactly this structure:
-    {
+    - If you choose **document_to_notion**, respo
+    {nd with a JSON object containing the full analysis in exactly this structure:
         "summary": "Short explanation",
         "protocol_analysis": "Protocol-level explanation",
         "security_assessment": "Security interpretation",
@@ -63,7 +62,7 @@ def analyze_packet_with_local_llm(packet: dict)-> dict:
     """
 
     try:
-        response = ollama.chat(
+        stream = ollama.chat(
             model=LOCAL_LLM_MODEL,
             messages=[
                 {
@@ -75,23 +74,27 @@ def analyze_packet_with_local_llm(packet: dict)-> dict:
                     "content": prompt
                 }
             ],
-            format="json"
+            format="json",
+            stream=True 
         )
 
-        responses= response["message"]["content"]
-        role = response["messages"]["role"]
-        print(f"This was asked by {role}")
-        print(f"This is the response: {responses}")
-        if not responses:
-            raise RuntimeError(
-                "Local LLM return a empty response."
-            )
+        response = []
 
-        result = json.loads(responses) # Convert JSON formated string into python object
+        for chunk in stream:
+            content = chunk["message"]["content"]
+            print(content, end="", flush=True)
+            response.append(content)
+        print("\n")
+
+        if not response:
+            raise RuntimeError("Local LLM did not returned anything.......")
+
+        res = "".join(response)
+        result = json.loads(res)
         return result
 
     except Exception as e:
-        print("Local LLM error: {exc}")
+        print(f"Local LLM error: {e}")
         return {
             "Summary" : "There is empty response from qwen",
             "Description": "Qwen analysis failed."
