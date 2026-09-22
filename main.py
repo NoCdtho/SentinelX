@@ -1,6 +1,13 @@
 from tools.tshark import check_tshark, list_interfaces
 from pipeline import analysis
+import os
+from dotenv import load_dotenv, set_key
 
+
+# This funtion is used to load and set the variables from env files
+load_dotenv()
+
+env_path = ".env"
 
 def print_help():
     print("\nAvailable commands:")
@@ -16,19 +23,27 @@ def main():
     print("AI NETWORK PACKET ANALYSIS TOOL")
     print("=" * 60)
     print_help()
-
+    print()
+    print("\nSelect interface either wi-fi or ethernet.........")
+    print()
     while True:
         try:
             command = input("\ncyber-analyzer> ").strip().lower()
+           
         except (KeyboardInterrupt, EOFError):
             print("\nExiting...")
             break
 
-        if command == "start":
+        if command == "ethernet":
+            set_key(env_path, "TSHARK_INTERFACE", command)
+            updated_interfaces = os.getenv("TSHARK_INTERFACE")
+            print(f"Now the interface is updated  to {updated_interfaces}")
+        elif command == "start":
             analysis()
         elif command == "interfaces":
             if check_tshark():
                 list_interfaces()
+               
             else:
                 print("TShark is not installed or is not available in PATH.")
         elif command == "help":
