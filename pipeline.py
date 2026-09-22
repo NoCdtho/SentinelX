@@ -53,14 +53,20 @@ def analysis():
             break
 
         decision_and_explanation = analyze_packet_with_local_llm(packet)
+        packet_data_for_notion = {
+            "packet": packet,
+            "analysis": decision_and_explanation
+        }
 
         print()
-        tool = decision_and_explanation.get("tool")
-        print("print tool choosen: ", tool)
+        tool = decision_and_explanation.get("tool_name")
+        print(f"\nAgent wants to call the tool: {tool} ")
 
         explanation = decision_and_explanation.get("explanation")
-        print(explanation)
-        analyzed_packets.append(explanation)
+        print("\nExplanation from the LLM is: ", explanation)
+
+        # append the packet and analyzed in the list
+        analyzed_packets.append(packet_data_for_notion)
         
         # Call the tool decided by the LLM
         if tool == "fetch_tshark_packets":
@@ -81,11 +87,9 @@ def analysis():
                 print("Warning: Explanation was not a list. Auto-formatting.")
                 explanation = [explanation]
 
-            # Pass Qwen's extracted explanation to Notion
             print("\nCREATING NOTION DOCUMENT\n")
             create_notion_page(analyzed_packets)
             
-            # Immediately exit the analysis function
             return
 
     # Fallback just in case the loop finishes without calling the Notion tool or hitting the limit
