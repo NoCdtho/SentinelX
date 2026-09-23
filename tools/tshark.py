@@ -41,6 +41,7 @@ def list_interfaces() -> list:
         for interface in interfaces:
             print(f"  {interface}")
         return interfaces
+    
     except Exception as exc:
         print(f"Error listing interfaces: {exc}")
         return []
@@ -70,15 +71,11 @@ def capture_packets(interface: str, packet_limit: int = MAX_PACKETS) -> list[dic
             timeout=120 # waiting time.
         )
 
-        if process.returncode != 0:
+        if process.returncode != 0 or not process.stdout.strip:
             print("TShark returned an error:")
             print(process.stderr)
             return []
-
-        if not process.stdout.strip():
-            print("No packets captured.")
-            return []
-
+        
         try:
             packets = json.loads(process.stdout) # JSON formated string converted into python object 
         except json.JSONDecodeError as exc:

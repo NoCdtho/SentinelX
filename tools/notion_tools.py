@@ -57,6 +57,7 @@ def code_block(code: str, language: str = "json") -> dict:
 
 def build_packet_blocks(item: dict) -> list:
     """Build Notion blocks for a single analyzed packet."""
+    print("type of item", type(item))
     packet = item["packet"]
     analysis = item["analysis"]
     number = packet["packet_number"]
