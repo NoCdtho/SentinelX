@@ -1,0 +1,16 @@
+[
+  {
+    "id": "PB-IPI-CONTAIN-EXFIL",
+    "source": "SentinelX Defensive Playbook",
+    "title": "Contain Indirect Prompt Injection & Exfiltration",
+    "severity_trigger": "CRITICAL",
+    "recommended_actions": [
+      "SANITIZE_LLM_OUTPUT",
+      "STRIP_MARKDOWN_IMAGES",
+      "ENFORCE_STRICT_CSP",
+      "GENERATE_CRITICAL_ALERT"
+    ],
+    "requires_human_approval": true,
+    "instructions": "Immediately sanitize outgoing LLM responses to prevent automatic rendering of external image URLs. Enforce a Content Security Policy (CSP) blocking unauthorized outbound image fetch requests to unknown external domains."
+  }
+]
