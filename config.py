@@ -1,7 +1,24 @@
 import os
 from dotenv import load_dotenv
+from pathlib import Path
+from dataclasses import dataclass 
 
 load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent
+
+chroma_db_dir: str = os.getenv("CHROMA_DB_DIR", str(BASE_DIR / "chroma_db"))
+collection_name: str = os.getenv("CHROMA_COLLECTION", "sentinelx_knowledge_base")
+# Relational Database (PostgreSQL / pgvector) Configuration
+db_host: str = os.getenv("DB_HOST", "localhost")
+db_port: int = int(os.getenv("DB_PORT", "5432"))
+db_name: str = os.getenv("DB_NAME", "sentinelx")
+db_user: str = os.getenv("DB_USER", "postgres")
+db_password: str = os.getenv("DB_PASSWORD", "")
+
+def postgres_connection_uri() -> str:
+        return f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+
 
 # Capture Settings
 MAX_PACKETS = 1
