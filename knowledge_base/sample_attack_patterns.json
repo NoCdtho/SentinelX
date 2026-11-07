@@ -1,0 +1,23 @@
+[
+  {
+    "id": "RULE-HTTP-001",
+    "protocol": "HTTP",
+    "severity": "critical",
+    "attack_type": "SQL Injection",
+    "description": "SQL injection pattern detected in HTTP GET parameter with UNION SELECT syntax attempting database enumeration."
+  },
+  {
+    "id": "RULE-TCP-002",
+    "protocol": "TCP",
+    "severity": "high",
+    "attack_type": "SYN Flood",
+    "description": "TCP SYN Flood pattern with excessive SYN packets sent from single IP without ACK handshake completion."
+  },
+  {
+    "id": "RULE-DNS-003",
+    "protocol": "DNS",
+    "severity": "medium",
+    "attack_type": "DNS Tunneling",
+    "description": "High entropy TXT record query frequencies indicative of outbound DNS tunneling data exfiltration."
+  }
+]
