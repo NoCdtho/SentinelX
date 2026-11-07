@@ -1,6 +1,10 @@
-# rag/vector_store.py
-# Persistent ChromaDB vector database manager for SentinelX threat knowledge
-# Persistent ChromaDB vector database manager for SentinelX threat knowledge
+"""
+ChromaVectorStore is the persistence + query layer for the RAG system: it 
+owns the ChromaDB client, enforces input sanity, and exposes the four 
+primitives the rest of the code needs — upsert_chunks, search_similar, 
+delete_by_doc_id, update_document — plus reset_collection and get_count. 
+It knows nothing about packets, queries, or LLM formatting.
+"""
 import logging
 import math
 from pathlib import Path

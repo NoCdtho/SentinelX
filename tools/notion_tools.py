@@ -1,3 +1,6 @@
+# SentinelX Notion Tools
+# Builds and publishes formatted packet analysis reports to Notion, including 
+# packet summaries, protocol analysis, security assessments, and MITRE ATT&CK technique mappings.
 import json
 from datetime import datetime, timezone
 import requests

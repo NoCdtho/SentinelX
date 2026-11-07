@@ -3,7 +3,7 @@ import ollama
 from config import LOCAL_LLM_MODEL
 from rag.rag_pipeline import SentinelRAGPipeline
 
-# Initialize RAG Pipeline (loads ChromaDB retriever and ContextBuilder)
+
 rag_pipeline = SentinelRAGPipeline()
 
 system_prompt = """

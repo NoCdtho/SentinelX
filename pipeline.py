@@ -46,7 +46,6 @@ def analysis():
     analyzed_packets = []
 
     # Iterate directly through the parsed packets list. 
-    # Python allows dynamically appending to a list while iterating over it.
     for packet in parsed_packets:
 
         if len(parsed_packets) > 5:
@@ -94,7 +93,6 @@ def analysis():
             return
 
     # Fallback just in case the loop finishes without calling the Notion tool or hitting the limit
-    if analyzed_packets:
-        print("\nFinished analyzing all packets. Creating Notion Document.")
-        create_notion_page(analyzed_packets)
-        return
+    print("\nFinished analyzing all packets. Creating Notion Document.")
+    create_notion_page(analyzed_packets)
+    return

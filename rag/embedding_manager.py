@@ -1,6 +1,5 @@
-# rag/embedding_manager.py
 # Manages vector embedding generation using Ollama's `nomic-embed-text` model
-# Manages vector embedding generation using Ollama's `nomic-embed-text` model
+
 import logging
 import requests
 from typing import List, Tuple, Optional

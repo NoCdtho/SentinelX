@@ -1,6 +1,10 @@
 """
-Orchestrates RAG ingestion: loads JSON KB, chunks, 
-generates nomic-embed-text embeddings, stores in ChromaDB
+Orchestrates RAG ingestion pipeline: loads JSON KB 
+documents → generates nomic-embed-text embeddings → stores in persistent ChromaDB. 
+orchestrate_ingestion() is the main entry point, supporting automatic sample pattern 
+creation when no documents exist. 
+Uses LangChain's Chroma.from_documents() for vector storage. 
+Key methods: load_pattern_documents(), orchestrate_ingestion().
 """
 
 import json

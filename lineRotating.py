@@ -1,6 +1,6 @@
-import itertools 
-import sys 
-import time 
+import itertools
+import sys
+import time
 
 
 def spin_loader(stop_event):
